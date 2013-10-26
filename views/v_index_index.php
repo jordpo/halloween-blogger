@@ -1,11 +1,19 @@
-<p>
-	Hello World! You have successfully spawned a new application.
-</p>
+<h4>Welcome to..</h4>
+<h1>Morano Space</h1>
 
 <p>
-	This message is being triggered via the c_index.php controller, within the index() method.
+	Welcome to <?=APP_NAME?>. A simple micro-blog site where you can create your own short posts or follow others!
 </p>
 
-<p>
-	<strong>Since everything is in working order, you should now delete <?php echo APP_PATH?>diagnostics.php</strong>
-</p>
+<?php if(!$user): ?>
+	<nav id="nav_index">
+		<a href="users/signup">Sign Up</a>
+		<a href="users/login">Log In</a>
+	</nav>
+<?php else: ?>
+
+	<h2>Welcome! <?=$user->first_name?></h2>
+
+	<a href="/users/profile">Profile Page</a>
+	
+<?php endif; ?>

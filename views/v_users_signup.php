@@ -2,7 +2,7 @@
 
 <form method='POST' action='/users/p_signup'>
 	
-	First Name <input type='text' name='first_name'><br \>
+	<span class="form">First Name</span> <input type='text' name='first_name'><br \>
 	Last Name <input type='text' name='last_name'><br \>
 	Email <input type='email' name='email'><br \>
 	Password <input type='password' name='password'><br \>
