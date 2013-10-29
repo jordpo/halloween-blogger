@@ -13,7 +13,7 @@
 	Password
 	<br>
 	<input type='password' name='password'>
-
+	<br>
 	<?php if($error == 'error'): ?>
 		<div class='error'>
 			Login failed. Please double check your email and password. 
