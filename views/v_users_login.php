@@ -13,18 +13,17 @@
 	Password
 	<br>
 	<input type='password' name='password'>
-	<br><br>
 
 	<?php if($error == 'error'): ?>
 		<div class='error'>
 			Login failed. Please double check your email and password. 
 		</div>
-		<br>
+		<br> <br>
 	<?php elseif($error == 'emailerr'): ?>
 		<div class='error'>
 			Login failed. Please double check your email. 
 		</div>
-		<br>	
+		<br> <br>	
 	<?php endif; ?>
 
 	<input type='submit' value='Log In'>

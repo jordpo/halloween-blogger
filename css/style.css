@@ -25,6 +25,7 @@ a:hover {
 
 .separator {
 	font-size: 2em;
+	background-color: Orange;
 }
 
 #top_nav {
@@ -221,4 +222,5 @@ input[type='submit']:hover {
 
 .error {
 	color: red;
+	margin-top: 10px;
 }
