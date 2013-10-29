@@ -37,7 +37,7 @@
 		    <br><br>
 
 		    <?php if($post['user_id'] == $user->user_id): ?>
-			    <a href="/posts/deletepostonprofile/<?=$post['post_id']?>">Delete Post</a>
+			    <a class="smalllink" href="/posts/deletepostonprofile/<?=$post['post_id']?>">Delete Post</a>
 		    <?php endif; ?>
 		    <br><br>
 	    </div>

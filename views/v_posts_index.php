@@ -9,9 +9,9 @@
 <?php foreach($posts as $post): ?>
 	<article class='post clearfix'>
 
-		<div>
+		<div class="post_pic">
 			<img class='img_big' src="/uploads/avatars/<?=$post['avatar']?>">
-		    <h1><?=$post['first_name']?> <?=$post['last_name']?> posted:</h1> 
+		    <h4><?=$post['first_name']?> <?=$post['last_name']?> posted:</h4> 
 		</div>
 
 	    <div class='post_div'>
@@ -23,7 +23,7 @@
 		    <br><br>
 
 		    <?php if($post['post_user_id'] == $user->user_id): ?>
-			    <a href="/posts/deletepost/<?=$post['post_id']?>">Delete Post</a>
+			    <a class="smalllink" href="/posts/deletepost/<?=$post['post_id']?>">Delete Post</a>
 		    <?php endif; ?>
 		    <br><br>
 	    </div>
