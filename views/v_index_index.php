@@ -11,8 +11,8 @@
 	<article class="general">
 		<h2>Welcome! <?=$user->first_name?></h2>
 		<p>Make sure to check out the links above to update your 
-			<a href="/users/profile/<?=$user->user_id?>">Profile</a> 
-			image or start following <a href="/posts/users">Users</a>!</p>
+			<a class="smalllink" href="/users/profile/<?=$user->user_id?>">Profile</a> 
+			image or start following <a class="smalllink" href="/posts/users">Users</a>!</p>
 	</article>
 	
 <?php endif; ?>
