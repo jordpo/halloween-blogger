@@ -1,9 +1,31 @@
-<h2>Log In</h2>
+<article class="general">
+	<h2>Log In</h2>
+</article>
+
+<br><br>
 
 <form method='post' action='/users/p_login'>
 
-	Email <input type='email' name='email'>
-	Password <input type='password' name='password'>
+	Email
+	<br>
+	<input type='email' name='email'>
+	<br>
+	Password
+	<br>
+	<input type='password' name='password'>
+	<br><br>
+
+	<?php if($error == 'error'): ?>
+		<div class='error'>
+			Login failed. Please double check your email and password. 
+		</div>
+		<br>
+	<?php elseif($error == 'emailerr'): ?>
+		<div class='error'>
+			Login failed. Please double check your email. 
+		</div>
+		<br>	
+	<?php endif; ?>
 
 	<input type='submit' value='Log In'>
 

@@ -11,13 +11,6 @@ class posts_controller extends base_controller {
        		die("Want to see posts?? Log in! <a href='/users/login'>Login</a>");
        	}
 
-       	# Load client files
-        $client_files_head = Array('/css/style.css','/js/function.js');
-        $this->template->client_files_head = Utils::load_client_files($client_files_head);
-
-        $client_files_body = Array('/js/script.js');
-        $this->template->client_files_body = Utils::load_client_files($client_files_body);
-
     } 
 
 	public function add() {
@@ -46,7 +39,7 @@ class posts_controller extends base_controller {
 
 
 		# Possibly do a redirect here instead to post view
-		echo "Your post has been added. <a href='/posts/add'>Add another</a>";
+		Router::redirect('/posts');
 
 	}
 
@@ -62,7 +55,7 @@ class posts_controller extends base_controller {
 
 	    # Execute the query to get all the users. 
 	    # Store the result array in the variable $users
-	    $users = DB::instance(DB_NAME)->select_rows($q);
+	    $pusers = DB::instance(DB_NAME)->select_rows($q);
 
 	    # Build the query to figure out what connections does this user already have? 
 	    # I.e. who are they following
@@ -77,7 +70,7 @@ class posts_controller extends base_controller {
 	    $connections = DB::instance(DB_NAME)->select_array($q, 'user_id_followed');
 
 	    # Pass data (users and connections) to the view
-	    $this->template->content->users       = $users;
+	    $this->template->content->pusers       = $pusers;
 	    $this->template->content->connections = $connections;
 
 	    # Render the view
@@ -105,7 +98,7 @@ class posts_controller extends base_controller {
 	public function unfollow($user_id_followed) {
 
 	    # Delete this connection
-	    $where_condition = 'WHERE user_id = '.$this->user->user_id.' AND user_id_followed = '.$user_id_followed;
+	    $where_condition = 'WHERE user_id = '. $this->user->user_id .' AND user_id_followed = '.$user_id_followed;
 	    DB::instance(DB_NAME)->delete('users_users', $where_condition);
 
 	    # Send them back
@@ -122,18 +115,21 @@ class posts_controller extends base_controller {
 
 		# Build the query
 		$q = 'SELECT 
+		    posts.post_id,
 		    posts.content,
 		    posts.created,
 		    posts.user_id AS post_user_id,
 		    users_users.user_id AS follower_id,
 		    users.first_name,
-		    users.last_name
+		    users.last_name,
+		    users.avatar
 			FROM posts
-			INNER JOIN users_users 
+			JOIN users_users 
 			    ON posts.user_id = users_users.user_id_followed
-			INNER JOIN users 
+			JOIN users 
 			    ON posts.user_id = users.user_id
-			WHERE users_users.user_id = ' . $this->user->user_id;
+			WHERE users_users.user_id = ' . $this->user->user_id . '
+			ORDER BY posts.created DESC' ;
 
 		# Run it
 		$posts = DB::instance(DB_NAME)->select_rows($q);
@@ -144,6 +140,24 @@ class posts_controller extends base_controller {
 		# Render the view
 		echo $this->template;
 
+	}
+
+	public function deletepost($post_to_delete) {
+		$where_condition = 'WHERE post_id = ' . $post_to_delete;
+
+		DB::instance(DB_NAME)->delete('posts', $where_condition);
+
+	    # Send them back
+	    Router::redirect("/posts");
+	}
+
+	public function deletepostonprofile($post_to_delete) {
+		$where_condition = 'WHERE post_id = ' . $post_to_delete;
+
+		DB::instance(DB_NAME)->delete('posts', $where_condition);
+
+	    # Send them back
+	    Router::redirect("/users/profile/" . $this->user->user_id);
 	}
 
 }

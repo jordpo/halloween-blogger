@@ -1,17 +1,59 @@
-<?php foreach($users as $user): ?>
+<?php foreach($pusers as $puser): ?>
+    <?php if($user->user_id == $puser['user_id']): ?>
+        <article class="users_top users">
+            
+            <div>
+                <img src="/uploads/avatars/<?=$puser['avatar']?>">
+                <br>
+                <p>
+                    <?=$puser['first_name']?> <?=$puser['last_name']?>
+                </p>
 
-    <!-- Print this user's name -->
-    <?=$user['first_name']?> <?=$user['last_name']?>
+            </div>
 
-    <!-- If there exists a connection with this user, show a unfollow link -->
-    <?php if(isset($connections[$user['user_id']])): ?>
-        <a href='/posts/unfollow/<?=$user['user_id']?>'>Unfollow</a>
+            <nav>
+                <!-- If there exists a connection with this user, show a unfollow link -->
+                <?php if(isset($connections[$puser['user_id']])): ?>
+                    <a href='/posts/unfollow/<?=$puser['user_id']?>'>Hide posts from you</a>
 
-    <!-- Otherwise, show the follow link -->
-    <?php else: ?>
-        <a href='/posts/follow/<?=$user['user_id']?>'>Follow</a>
-    <?php endif; ?>
+                <!-- Otherwise, show the follow link -->
+                <?php else: ?>
+                    <a href='/posts/follow/<?=$puser['user_id']?>'>See posts from you</a>
+                <?php endif; ?>
+            </nav>
+        </article>
 
-    <br><br>
+        <br><br>
+    <?php endif;?>
 
+    
+
+<?php endforeach; ?>
+
+<?php foreach($pusers as $puser): ?>
+    <?php if($user->user_id != $puser['user_id']): ?>
+        <article class="users">
+            
+            <div>
+                <img src="/uploads/avatars/<?=$puser['avatar']?>">
+                <br>
+                <p>
+                    <?=$puser['first_name']?> <?=$puser['last_name']?>
+                </p>    
+            </div>
+
+            <nav>
+                <a href="/users/profile/<?=$puser['user_id']?>">Profile</a>
+                <!-- If there exists a connection with this user, show a unfollow link -->
+                <?php if(isset($connections[$puser['user_id']])): ?>
+                    <a href='/posts/unfollow/<?=$puser['user_id']?>'>Unfollow</a>
+
+                <!-- Otherwise, show the follow link -->
+                <?php else: ?>
+                    <a href='/posts/follow/<?=$puser['user_id']?>'>Follow</a>
+                <?php endif; ?>
+            </nav>
+        </article>
+        <br><br>
+    <?php endif;?>
 <?php endforeach; ?>

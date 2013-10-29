@@ -10,7 +10,7 @@ class users_controller extends base_controller {
         echo "This is the index page";
     }
 
-    public function signup() {
+    public function signup($error = NULL) {
         
         # first, set the content via a view file
         $this->template->content = View::instance('v_users_signup');
@@ -18,35 +18,93 @@ class users_controller extends base_controller {
         # set the <title> 
         $this->template->title = APP_NAME . ": Sign Up";
 
-        # CSS and JS Includes
-        $client_files_head = Array("/css/style.css");
-        $this->template->client_files_head = Utils::load_client_files($client_files_head);
-
+        # Pass data to the view
+        $this->template->content->error = $error;
 
         # render this view
         echo $this->template;
+
     }
 
     public function p_signup() { 
 
-        # Additional data to store with each user
-        $_POST['created'] = Time::now();
-        $_POST['modified'] = Time::now();
+        ##### Validation checks #######
+        
+        # Email duplicate check # 
+        $e = 'SELECT email
+                FROM users
+                WHERE email = "' . $_POST['email'] . '"';
+        $email = DB::instance(DB_NAME)->select_field($e);
 
-        # Encrypt the password
-        $_POST['password'] = sha1(PASSWORD_SALT. $_POST['password']);
-       
-        # Create an encrypted token via the email address and a random string
-        $_POST['token'] = sha1(TOKEN_SALT . $_POST['email'] . Utils::generate_random_string());
+        # Blank validation error check #
+        if ($_POST['first_name'] == "" || 
+            $_POST['last_name'] == "" ||
+            $_POST['email'] == "" ||
+            $_POST['password'] == "" ||
+            $_POST['password_check'] == "") {
+            $val_error = 'blanks';
+        
+        # Dupe email validation error check #
+        } elseif($email) {
+            $val_error = 'emaildupe';
+        
+        # Invalid email format error check #
+        } elseif(strpos($_POST['email'], '@', 1) === FALSE ||
+            strpos($_POST['email'], '@') > strlen($_POST['email']) - 6) {
+            $val_error = 'emailinvalid';
+        
+        # Password mismatch error check #
+        } elseif($_POST['password'] != $_POST['password_check']) {
+            $val_error = 'password';
+        
+        # Pass all validations, set variable to blank
+        } else {
+            $val_error = '';
+        }
 
-        # Insert into table users
-        DB::instance(DB_NAME)->insert_row('users', $_POST);
+        # Use a switch statement to go through validation checks
+        switch ($val_error) {
+            case 'blanks':
+                Router::redirect('/users/signup/blanks');
+                break;         
+            case 'emailinvalid':
+                Router::redirect('/users/signup/emailinvalid');
+                break;
+            case 'emaildupe':
+                Router::redirect('/users/signup/emaildupe');
+                break;
+            case 'password':
+                Router::redirect('/users/signup/password');
+                break;
+            default:
+                # Additional data to store with each user
+                $_POST['created'] = Time::now();
+                $_POST['modified'] = Time::now();
 
-        Router::redirect('/users/login');
+                # Randomly select an avatar to start
+                $avatar = Array("cat.gif", "ghost.png", "monster.png", "witch.png");
+                $i = rand(0,count($avatar)-1);
+                $_POST['avatar'] = $avatar[$i];
+
+                # Encrypt the password
+                $_POST['password'] = sha1(PASSWORD_SALT. $_POST['password']);
+               
+                # Unset password_check since we don't need it 
+                unset($_POST['password_check']);
+
+                # Create an encrypted token via the email address and a random string
+                $_POST['token'] = sha1(TOKEN_SALT . $_POST['email'] . Utils::generate_random_string());
+
+                # Insert into table users
+                DB::instance(DB_NAME)->insert_row('users', $_POST);
+
+                Router::redirect('/users/login');
+                break;
+        }
 
     }
 
-    public function login() {
+    public function login($error = NULL) {
         
         # link to content in view
         $this->template->content = View::instance('v_users_login');
@@ -54,9 +112,8 @@ class users_controller extends base_controller {
         # set <title>
         $this->template->title = APP_NAME . ": Login";
 
-        # CSS and JS includes
-        $client_files_head = Array("/css/style.css");
-        $this->template->client_files_head = Utils::load_client_files($client_files_head);
+        # Pass data to the view
+        $this->template->content->error = $error;
 
         # render this view
         echo $this->template;
@@ -73,18 +130,29 @@ class users_controller extends base_controller {
 
         # Search the db for this email and password
         # Retrieve the token if available
+
+        # Search for email specifically 
+        $e = 'SELECT email
+                FROM users
+                WHERE email = "' . $_POST['email'] . '"';
+
+        $email = DB::instance(DB_NAME)->select_field($e);
+
         $q = 'SELECT token 
             FROM users
             WHERE email = "' . $_POST['email'] . '"
             AND password = "' . $_POST['password'] . '"';
 
-
         $token = DB::instance(DB_NAME)->select_field($q);
 
-        # If no match - login failed
-        if(!$token) {
-            Router::redirect("/users/login/");
-        
+        # If no email match, login failed because of email
+        if(!$email) {
+            Router::redirect("/users/login/emailerr");
+
+        # Else if login fails without an email and password combo correct
+        } else if(!$token) {
+            Router::redirect("/users/login/error");
+
         # Or success! 
         } else {
             # Set cookie
@@ -114,7 +182,7 @@ class users_controller extends base_controller {
 
     }
 
-    public function profile() {
+    public function profile($user_id) {
 
         # If user is blank, not logged in. redirect to login
         if(!$this->user) {
@@ -126,32 +194,99 @@ class users_controller extends base_controller {
         # Set up View
         $this->template->content = View::instance('v_users_profile');
         $this->template->title = 'Profile of ' . $this->user->first_name;
-
-        # Load client files
-        $client_files_head = Array('/css/style.css','/js/function.js');
-        $this->template->client_files_head = Utils::load_client_files($client_files_head);
-
-        $client_files_body = Array('/js/script.js');
-        $this->template->client_files_body = Utils::load_client_files($client_files_body);
         
-        # Pass data to the view
+        ### Query for $this_user to access specific profile ####
+        $q = 'SELECT
+            user_id,
+            first_name,
+            last_name,
+            avatar, 
+            avatar_history
+            FROM users
+            WHERE user_id = ' . $user_id;
+
+        # Run it
+        $all_users = DB::instance(DB_NAME)->select_rows($q);
+        
+        # Find this user (determined by $user_id parameter)
+        foreach ($all_users as $all_user) {
+            if($all_user['user_id'] == $user_id){
+                $this_user = $all_user;
+            }
+        }
+
+        ### End of $this_user query ###
+
+        # Since we need to do some things to avatar_history, create a variable
+        $avatar_history = $this_user['avatar_history'];
+
+        # Explode it into an array
+        $avatars = explode(",", $avatar_history);
+
+        # Query to gather user's posts
+        $d = 'SELECT 
+            post_id,
+            content,
+            created,
+            user_id FROM posts
+            WHERE user_id = ' . $user_id . '
+            ORDER BY created DESC';
+
+        # Run it
+        $posts = DB::instance(DB_NAME)->select_rows($d);
+
+        # Pass all data to the view
         $this->template->content->user_name = $user_name;
+        $this->template->content->avatars = $avatars;
+        $this->template->content->this_user = $this_user;
+        $this->template->content->posts = $posts;
         
         # Display the view
         echo $this->template;
 
-        //$view = View::instance('v_users_profile'); // static get of method instance to retrieve file
+    }
 
-        //$view->user_name = $user_name; // pass a global variable to the new variable
+    public function p_upload() {
 
-        //echo $view; // echo it out so that it is displayed
+        # Save old image path
+        $avatar_old = $this->user->avatar;
 
-        /*if($user_name == NULL) {
-            echo "No user specified";
+        # Pull up old avatar history
+        $q = 'SELECT avatar_history 
+            FROM users
+            WHERE user_id = ' . $this->user->user_id;
+
+        $avatar_history = Array(DB::instance(DB_NAME)->select_field($q));
+
+        # Add image path to the avatar history array
+        array_push($avatar_history, $avatar_old);
+
+        # Make the array one string delimited by comma
+        $ahist = implode(",", $avatar_history);
+
+        # Create the data array we'll use with the update method
+        $adata = Array("avatar_history" => $ahist);
+
+        # Do the update
+        DB::instance(DB_NAME)->update("users", $adata, "WHERE token = '" . $this->user->token . "'"); 
+
+        # Upload image to directory
+        $profile = Upload::upload($_FILES, "/uploads/avatars/", 
+            array("jpg", "jpeg", "gif", "png"), 
+            "user" . $this->user->user_id . "_" . Time::now());
+
+        # Redirect back to page if no file is loaded
+        if($profile == "Invalid file type.") {
+            Router::redirect("/users/profile");
         }
-        else {
-            echo "This is the profile for ".$user_name;
-        }*/
+
+        # Create the data array we'll use with the update method
+        $data = Array("avatar" => $profile);
+
+        # Do the update
+        DB::instance(DB_NAME)->update("users", $data, "WHERE token = '" . $this->user->token . "'");
+
+        Router::redirect("/users/profile/" . $this->user->user_id);
     }
 
 } # end of the class
