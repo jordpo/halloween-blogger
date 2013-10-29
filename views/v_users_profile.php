@@ -8,7 +8,7 @@
 
 <?php if($user->user_id == $this_user['user_id']):?>
 	<form method='POST' enctype="multipart/form-data" action='/users/p_upload/'>	
-		<h3>Update Profle Image</h3>
+		<h3>Update Profile Image</h3>
 		<input type='file' name='avatar'>
 		<input type='submit'>
 	</form>

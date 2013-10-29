@@ -162,6 +162,7 @@ form, .post {
 	background-color: Yellow;
 	border: 5px dashed #000;
 	display: inline-block;
+	margin-left: 2%;
 }
 
 .users div {

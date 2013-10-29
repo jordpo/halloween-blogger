@@ -1,3 +1,8 @@
+<article class="general">
+    <h1>Make sure to follow someone!</h1>
+    <p>What do you want to see in your <a href="/posts">Posts</a> feed?</p>
+</article>
+<br><br>
 <?php foreach($pusers as $puser): ?>
     <?php if($user->user_id == $puser['user_id']): ?>
         <article class="users_top users">
