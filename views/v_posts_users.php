@@ -8,8 +8,21 @@
     <?php foreach($pusers as $puser): ?>
         <?php if($user->user_id == $puser['user_id']): ?>
             <article class="users_top">
+                <div class="postcount">
+                    <?php
+                        $count;
+                        foreach ($posts as $post) {
+                            if($puser['user_id'] == $post['user_id']){
+                                $count++;
+                            }
+                        }
+                        echo $count;
+                    ?>
+                </div>
+
                 <img src="/uploads/avatars/<?=$puser['avatar']?>">
                 <p><?=$puser['first_name']?> <?=$puser['last_name']?></p>
+
                 <nav>
                     <!-- If there exists a connection with this user, show a unfollow link -->
                     <?php if(isset($connections[$puser['user_id']])): ?>
@@ -28,8 +41,20 @@
     <?php foreach($pusers as $puser): ?>
         <?php if($user->user_id != $puser['user_id']): ?>
             <article style='display:inline-block;'>
+                <div class="postcount">
+                    <?php
+                        $count = 0;
+                        foreach ($posts as $post) {
+                            if($puser['user_id'] == $post['user_id']){
+                                $count++;
+                            }
+                        }
+                        echo $count;
+                    ?>
+                </div>
                 <img src="/uploads/avatars/<?=$puser['avatar']?>">
                     <p><?=$puser['first_name']?> <?=$puser['last_name']?></p>    
+
                 <nav>
                     <a class="smalllink" href="/users/profile/<?=$puser['user_id']?>">Profile</a>
                     <!-- If there exists a connection with this user, show a unfollow link -->

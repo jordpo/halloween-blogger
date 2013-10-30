@@ -1,7 +1,7 @@
 
 <?php if(count($posts) == 0): ?>
 	<article class='post'>
-		<p>Make sure to follow someone under <a href="/posts/users">Users</a> to see posts!</p>
+		<p>Make sure to follow someone under <a class="smalllink" href="/posts/users">Users</a> to see posts!</p>
 	</article>
 <?php endif; ?>
 

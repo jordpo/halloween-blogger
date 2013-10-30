@@ -49,6 +49,13 @@ class posts_controller extends base_controller {
 	    $this->template->content = View::instance("v_posts_users");
 	    $this->template->title   = "Users";
 
+	    # Query posts to get post counts
+	    $q = "SELECT user_id
+	    	FROM posts";
+	    
+	    $posts = DB::instance(DB_NAME)->select_rows($q);
+
+
 	    # Build the query to get all the users
 	    $q = "SELECT *
 	        FROM users";
@@ -72,6 +79,7 @@ class posts_controller extends base_controller {
 	    # Pass data (users and connections) to the view
 	    $this->template->content->pusers       = $pusers;
 	    $this->template->content->connections = $connections;
+	    $this->template->content->posts = $posts;
 
 	    # Render the view
 	    echo $this->template;

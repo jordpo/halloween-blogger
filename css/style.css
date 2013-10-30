@@ -196,6 +196,16 @@ form, .post {
 	margin-left: 15%;
 }
 
+.postcount {
+	border: 1px solid;
+	border-radius: 50px 50px;
+	margin: 0;
+	padding: 2px;
+	display: inline-block;
+	float: right;
+	background-color: #FF6600;
+}
+
 /* Styling for form inputs */
 
 input {
