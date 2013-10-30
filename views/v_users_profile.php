@@ -45,7 +45,7 @@
 		<?php if($avatars[$i] != ""): ?>
 			<img class="img_big" src="<?=$avatars[$i]?>">
 			<br>
-			<?php if($this_user['user_id'] == $user->user_id)?>
+			<?php if($this_user['user_id'] == $user->user_id): ?>
 				<a class="smalllink" href="/users/deletepic/<?=$i?>">Delete Photo</a>
 			<?php endif; ?>
 			<br><br>
