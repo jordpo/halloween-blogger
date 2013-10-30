@@ -1,6 +1,6 @@
 body {
 	font-family: 'Underdog', cursive;
-	background-color: #000;
+	background-color: #4D4D4D;
 	width: 900px;
 }
 
@@ -24,6 +24,11 @@ a {
 	font-size: 1em;
 }
 
+.post_a {
+	position: relative;
+	top: 10px;
+	left: 15px;
+}
 nav {
 	margin-top: 20px;
 }
@@ -40,6 +45,14 @@ a:hover {
 #top_nav {
 	position: fixed;
 	margin-top: -50px;
+	width: 100%;
+	background-color: #624D77;
+	z-index: 1;
+}
+
+#top_nav a, .separator {
+	position: relative;
+	top: 10px;
 }
 
 .users nav {
@@ -48,6 +61,11 @@ a:hover {
 
 .users_top nav {
 	margin-left: 10%;
+}
+
+#profile_follow {
+	position: relative;
+	left: 120px;
 }
 
 /* End of Navigation styling */
@@ -68,9 +86,8 @@ img {
 }
 
 .img_big {
-	width:150px;
-	height: 150px;
-	margin-left: 5%;
+	width:100px;
+	height: 100px;
 }
 
 div {
@@ -79,18 +96,20 @@ div {
 }
 
 .post_div {
-	width: 43%;
+	width: 69%;
 	float: right;
-	margin-top: 5%;
-	margin-right: 10%;
-	border: 2px dashed;
+	border: 1px dashed;
 	border-radius: 5px 5px;
 	padding: 10px;
 	background-color: #FFFF66;
+	position: relative;
+	bottom: 25px;
 }
 
 .post_pic {
-	max-width: 30%
+	max-width: 20%;
+	margin: 0;
+	padding: 0;
 }
 
 .clearfix:after {
@@ -145,7 +164,7 @@ form, .post {
 	margin-left: 2%;
 }
 
-.post_history div {
+.post_history_div {
 	width: 80%;
 	margin-top: 5%;
 	margin-right: 10%;
@@ -164,6 +183,73 @@ form, .post {
 	border: 5px dashed #000;
 	display: inline-block;
 	margin-left: 2%;
+}
+
+.comments {
+	width: 90%;
+	background-color: #FFFFCC;
+	padding: 10px;
+	position: relative;
+	right: 20px;
+	bottom: 20px;
+	font-size: 12px;
+}
+
+.comment_single, .comment_single_content {
+	margin: 0;
+	padding: 0;
+	margin-bottom: 10px;
+	display: block;
+}
+
+.comment_single_content {
+	position: relative;
+	left: 50px;
+	top: 10px;
+	margin: 0;
+	padding: 5px;
+	width: 90%;
+	border: 1px dashed;
+}
+.comment_single_content p {
+	position: relative;
+	right: 50px;
+}
+
+.comm_prof {
+	width: 80%;
+}
+.comment_img {
+	margin:0;
+	margin-right: 5px;
+	float:left;
+	position: relative;
+	top: 15px;
+	border: none;	
+}
+.comments form {
+	border: none;
+	box-shadow: none;
+	margin: 0;
+	margin-top: 30px;
+	padding: 0;
+	background-color: #FFFFCC; 
+}
+
+.comments textarea {
+	width: 90%;
+	height: 50px;
+	font-size: 12px;
+}
+
+.comments input[type='submit'] {
+	background-color: Orange;
+	width: 100px;
+	font-size: 12px;
+	border: 1px solid #000;
+	box-shadow: 1px 1px 1px Orange;
+	margin: 0;
+	padding: 0;
 }
 
 /* Styling for following users page */

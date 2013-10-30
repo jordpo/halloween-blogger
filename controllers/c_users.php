@@ -235,11 +235,39 @@ class users_controller extends base_controller {
         # Run it
         $posts = DB::instance(DB_NAME)->select_rows($d);
 
+        # Query to get comments from posts
+        $q = "SELECT
+            comments.comment_id,
+            comments.created,
+            comments.modified,
+            comments.post_id,
+            comments.user_id,
+            comments.content,
+            users.first_name,
+            users.last_name,
+            users.avatar
+            FROM comments
+            JOIN users
+                ON comments.user_id = users.user_id";
+
+        # Run it
+        $comments = DB::instance(DB_NAME)->select_rows($q);
+
+        # Query connections 
+        $q = "SELECT * 
+            FROM users_users
+            WHERE user_id = ".$this->user->user_id;
+
+        # Run it
+        $connections = DB::instance(DB_NAME)->select_array($q, 'user_id_followed');
+
         # Pass all data to the view
         $this->template->content->user_name = $user_name;
         $this->template->content->avatars = $avatars;
         $this->template->content->this_user = $this_user;
         $this->template->content->posts = $posts;
+        $this->template->content->comments = $comments;
+        $this->template->content->connections = $connections;
         
         # Display the view
         echo $this->template;
@@ -286,6 +314,30 @@ class users_controller extends base_controller {
         # Do the update
         DB::instance(DB_NAME)->update("users", $data, "WHERE token = '" . $this->user->token . "'");
 
+        Router::redirect("/users/profile/" . $this->user->user_id);
+    }
+
+    public function deletepic($pic_index) {
+
+        # First pull up avatar history for this user
+        $avatar_history = $this->user->avatar_history;
+
+        # Explode string to an array
+        $avatar_history = explode(",", $avatar_history);
+
+        # Remove pic location path from string
+        unset($avatar_history[$pic_index]);
+
+        # Make it a string again
+        $avatar_history = implode(",", $avatar_history);
+
+        # Create the data array we'll use with the update method
+        $adata = Array("avatar_history" => $avatar_history);
+
+        # Do the update
+        DB::instance(DB_NAME)->update("users", $adata, "WHERE token = '" . $this->user->token . "'"); 
+
+        # Return to profile
         Router::redirect("/users/profile/" . $this->user->user_id);
     }
 
