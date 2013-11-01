@@ -6,6 +6,17 @@
 		Welcome to <?=APP_NAME?>. A simple micro-blog site where you can create your own short posts or follow others!
 		</p>
 	</article>
+
+	<br><br>
+	
+	<article class="general">
+		<h3>+1 Features</h3>
+		<p>Comments on posts</p>
+		<p>Profile photo upload</p>
+		<p>Seeing other user profiles</p>
+		<p>Form validation errors</p>
+	</article>
+
 <?php else: ?>
 
 	<article class="general">

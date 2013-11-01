@@ -4,6 +4,15 @@ body {
 	width: 900px;
 }
 
+article:nth-child(2) {
+	margin-top: 50px;
+}
+
+#post_form {
+	position: relative;
+	top: 50px;
+}
+
 /* Navigation Styling */
 
 a {
@@ -330,6 +339,9 @@ input[type='submit']:hover {
 	box-shadow: none;
 }
 
+em {
+	color: red;
+}
 /* Error messages */
 
 .error {

@@ -33,6 +33,7 @@
 <?php if($user->user_id == $this_user['user_id']):?>
 	<form method='POST' enctype="multipart/form-data" action='/users/p_upload/'>	
 		<h3>Update Profile Image</h3>
+		<p>Please keep the image file size under <em>1MB</em> and <em>crop to square</em> for best looking results!</p>
 		<input type='file' name='avatar'>
 		<input type='submit'>
 	</form>
