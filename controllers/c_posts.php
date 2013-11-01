@@ -5,12 +5,11 @@ class posts_controller extends base_controller {
 
 	public function __construct() {
         parent::__construct();
-    
-       	# The user needs to be logged in
-       	if(!$this->user) {
-       		die("Want to see posts?? Log in! <a href='/users/login'>Login</a>");
-       	}
 
+        # The user needs to be logged in
+	   	if(!$this->user) {
+	   		Router::redirect('/users/login');
+	   	}
     } 
 
 	public function add() {
