@@ -15,6 +15,7 @@
 		<p>Profile photo upload</p>
 		<p>Seeing other user profiles</p>
 		<p>Form validation errors</p>
+		<p>Delete posts and comments on feed and profile</p>
 	</article>
 
 <?php else: ?>
