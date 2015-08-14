@@ -1,4 +1,2 @@
-p2.dwa15-practice.biz
+A Halloween Theme blogging platform
 =====================
-
-Project 2 Test
